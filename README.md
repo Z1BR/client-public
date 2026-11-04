@@ -1,58 +1,42 @@
-# Z1BR client-public
+# Rebirth — H1Z1 King of the Kill
 
-Public downloads for the Z1BR launcher. Each GitHub release here (`release-<N>`) holds the launcher installer,
-`dinput8.dll` and a `manifest.json`. The source code lives in a private repository; this repo exists so anyone can
-download and check what the launcher consists of.
+Download the Rebirth launcher here and play H1Z1 King of the Kill on our servers.
 
-The launcher only installs what is listed in a `manifest.json` that carries a valid signature from the owner's key
-(`manifest.json.sig`, uploaded to the Z1BR website). The website serves the signed manifest; the launcher checks the
-signature and the SHA-256 of every file before using it.
+## What you need
 
-## Verify a download
+- Windows 10 or 11 (64-bit)
+- Steam, installed and signed in
+- About 15 GB of free disk space
 
-**Compare the SHA-256.** The release notes list the SHA-256 of every file. Compare:
+## Install
 
-    certutil -hashfile "KotK.Launcher_<version>_x64-setup.exe" SHA256
+1. Open **[Releases](../../releases/latest)** and download `KotK.Launcher_<version>_x64-setup.exe`.
+2. Run the installer. If Windows SmartScreen shows "Windows protected your PC", click **More info → Run anyway**.
+3. Start **KotK Launcher** from the Start menu.
 
-**Verify the signature** (needs the signed `manifest.json` and `manifest.json.sig` from the website, byte for byte):
+## First start
 
-    rebirth-sign verify --keys <dir with primary.pub and backup.pub> manifest.json manifest.json.sig
+1. **Sign in.** Click **Log in**. Your browser opens our website; sign in with Steam. When the page says
+   "Signed in", go back to the launcher.
+2. **Install the game.** Click **Install** and choose a folder for the game.
+   - The launcher opens the Steam console and copies a command for you.
+   - In the Steam console press **Ctrl+V**, then **Enter**. Steam downloads the game.
+   - Wait until the launcher shows the download as finished. It then moves and checks the game files and
+     downloads the extra game content by itself.
+3. **Pick a region.** At the top of the launcher choose your region, or leave it on **Auto** to use the fastest one.
 
-or with [minisign](https://jedisct1.github.io/minisign/):
+## Play
 
-    minisign -Vm manifest.json -x manifest.json.sig -P <public key line below>
+Click **Play**. The launcher prepares the game and starts it — no extra tools needed.
 
-Then compare the hashes in the verified manifest with your files.
+## Updates
 
-### Where to get manifest.json.sig
+When a new launcher version is out, the launcher shows an update notice. Click **Download update**; the new version
+installs and the launcher restarts. Nothing is updated without your click.
 
-The `manifest.json` attached to a release here is the file the owner signs; the signature is made offline afterwards,
-so a fresh release has no `.sig` yet. To get the signed pair:
+## Something went wrong?
 
-- **From the website** (what the launcher itself uses): `GET <site>/api/launcher/release` returns
-  `{"manifest": "<base64 of manifest.json>", "signature": "<text of manifest.json.sig>"}` for the current release
-  (`?version=<launcher version>` for an older launcher's release). Decode without changing a byte, e.g. in PowerShell:
-
-      $r = Invoke-RestMethod <site>/api/launcher/release
-      [IO.File]::WriteAllBytes("$PWD\manifest.json", [Convert]::FromBase64String($r.manifest))
-      [IO.File]::WriteAllText("$PWD\manifest.json.sig", $r.signature)
-
-- **From the release here**, when the owner has attached `manifest.json.sig` to it after signing (optional).
-
-Either way the signature must verify against the release's `manifest.json` byte for byte; a changed line ending or BOM
-makes it fail.
-
-## Public keys
-
-These are **TEST keys** until the owner's key ceremony is done. Do not trust releases signed with them.
-
-primary:
-
-    RWR/zZlGOP+FDMWVx/bobVse6VtKN9SPfVrCTU21LjfmjPKKmt4VwA9s
-
-backup (revocation only):
-
-    RWS/RH4cUjBPFqmakIQHxmKlHSqIsNv3SwRaSEin3MszNaBzmS7vWdOP
-
-The authoritative copy is `release-keys/` in the launcher source and on the website; this README is updated when the
-real keys are installed.
+- **The Steam console did not open:** make sure Steam is running and signed in, then click Install again.
+- **"Files modified" or the game does not start:** use **Verify files** in the launcher to repair the game files.
+- **The launcher reports a release or signature error:** do not install anything from elsewhere — wait for a fix
+  and let us know.
